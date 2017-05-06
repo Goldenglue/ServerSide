@@ -3,7 +3,6 @@ package serverpack;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
-import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
@@ -17,6 +16,8 @@ import java.util.Map;
 import java.util.Vector;
 
 /**
+ * Process commands that come from server or to server. Dedicated own class for formatting reasons, hope this way it's
+ * easier to add new commands and new methods for them.
  * Created by IvanOP on 04.05.2017.
  */
 public class Executor {
@@ -53,6 +54,25 @@ public class Executor {
         }
     }
 
+    /**
+     * Sets command for every function that works with server/client
+     * -dc - disconnect from server
+     * -sobjc - cannot be executed directly from server, identifies that client sent object
+     * -sobjs - send someVector to server in JSON format
+     * -clrc - cannot be executed directly from server,
+     * identifies that client requested to clear storage of objects on server
+     * -clrs - clears storage of objects on client
+     * -vecsc - cannot be executed directly from server,
+     * identifies that client requested size of objects storage on server
+     * -vecss -  requests size of objects storage on client
+     * -gobjc - cannot be executed directly from server,
+     * identifies that client requested object with given number ex:-gobjs3
+     * -gobjs - request of object with given number ex: -gobjc3
+     * -robj - cannot be executed directly from server,
+     * identifies that client sent requested object by command -gobjc
+     *
+     * @throws NoSuchMethodException
+     */
     private void setStringMethodMap() throws NoSuchMethodException {
         possibleCommands = new String[]{"-dc", "-sobjc", "-sobjs", "-clrc", "-clrs", "-vecsc", "-vecss", "-gobjs"
                 , "-gobjc", "-robj"};
@@ -93,7 +113,20 @@ public class Executor {
 
     private void disconnect() {
 
-        connection.isConnected = false;
+        try {
+            connection.isConnected = false;
+            connection.toClient.flush();
+            connection.toClient.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.server.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     private void sendSerializedObject() {
@@ -105,6 +138,7 @@ public class Executor {
         connection.toClient.flush();
     }
 
+    //i didn't really know what type incoming objects should be so i choose Object...
     private void receiveSerializedObject() {
         Gson gson = new Gson();
         try {
@@ -152,6 +186,8 @@ public class Executor {
         connection.toClient.flush();
     }
 
+    //type is used to give idea of what type object is going to be so client knows what constructor to use
+    // in this situation. might as well get a better checking procedure.
     private void sendObject() {
         Gson gson = new Gson();
         message = message.replaceAll("[^0-9]", "");

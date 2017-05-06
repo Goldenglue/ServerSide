@@ -14,11 +14,9 @@ public class Server implements Runnable {
     private Runnable runServer = () -> {
         while (true) {
             this.temp = serverUI.getMessageToClient();
-            serverUI.clearMessage();
             connection.setMessage(temp);
-
             try {
-                sleep(2000);
+                sleep(50);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

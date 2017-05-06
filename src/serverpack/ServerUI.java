@@ -35,11 +35,10 @@ public class ServerUI extends JFrame {
         jPanel.add(jTextField);
     }
 
-    public String getMessageToClient() {
-        return messageToClient;
+    String getMessageToClient() {
+        String temp = messageToClient;
+        messageToClient = "";
+        return temp;
     }
 
-    void clearMessage() {
-        this.messageToClient = "";
-    }
 }

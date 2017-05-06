@@ -37,7 +37,7 @@ public class Connection {
                     executor.executeMessageFromClient(message);
                     toClient.println("");
                     toClient.flush();
-                    sleep(2000);
+                    sleep(50);
                 }
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
@@ -47,6 +47,7 @@ public class Connection {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
         }
     };
 
@@ -59,7 +60,6 @@ public class Connection {
     void setMessage(String messageFromAdmin) {
         this.message = messageFromAdmin;
     }
-
 
 
 }
