@@ -42,6 +42,11 @@ public class Connection {
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
+            try {
+                serverSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     };
 

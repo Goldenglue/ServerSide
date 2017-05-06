@@ -54,8 +54,8 @@ public class Executor {
     }
 
     private void setStringMethodMap() throws NoSuchMethodException {
-        possibleCommands = new String[]{"-dc","-sobjc", "-sobjs", "-clrc", "-clrs", "-vecsc", "-vecss","-gobjs"
-                ,"-gobjc","-robj"};
+        possibleCommands = new String[]{"-dc", "-sobjc", "-sobjs", "-clrc", "-clrs", "-vecsc", "-vecss", "-gobjs"
+                , "-gobjc", "-robj"};
         stringMethodMap = new HashMap<>();
         for (int i = 0; i < possibleCommands.length; i++) {
             stringMethodMap.put(possibleCommands[i], calls[i]);
@@ -64,7 +64,7 @@ public class Executor {
 
     void executeMessageFromClient(String message) {
         this.message = message;
-        message = message.replaceAll("\\d","");
+        message = message.replaceAll("\\d", "");
         if (stringMethodMap.containsKey(message)) {
             for (Map.Entry<String, Call> temp : stringMethodMap.entrySet()) {
                 if (temp.getKey().equals(message)) {
@@ -92,12 +92,8 @@ public class Executor {
     }
 
     private void disconnect() {
-        try {
-            connection.isConnected = false;
-            connection.serverSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        connection.isConnected = false;
     }
 
     private void sendSerializedObject() {
@@ -118,7 +114,8 @@ public class Executor {
         }
         JsonParser jsonParser = new JsonParser();
         JsonArray jsonArray = jsonParser.parse(string).getAsJsonArray();
-        Type heh = new TypeToken<Object>(){}.getType();
+        Type heh = new TypeToken<Object>() {
+        }.getType();
         for (int i = 0; i < jsonArray.size(); i++) {
             System.out.println(jsonArray);
             someVector.add(gson.fromJson(string, heh));
@@ -157,7 +154,7 @@ public class Executor {
 
     private void sendObject() {
         Gson gson = new Gson();
-        message = message.replaceAll("[^0-9]","");
+        message = message.replaceAll("[^0-9]", "");
         String object = gson.toJson(someVector.get(Integer.valueOf(message)));
         String type;
         if (object.contains("png")) {
@@ -180,7 +177,8 @@ public class Executor {
         try {
             String object = connection.fromClient.readLine();
             System.out.println(object);
-            Type heh = new TypeToken<Object>(){}.getType();
+            Type heh = new TypeToken<Object>() {
+            }.getType();
             someVector.add(gson.fromJson(object, heh));
         } catch (IOException e) {
             e.printStackTrace();
